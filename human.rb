@@ -6,5 +6,3 @@ class Human < Player
     super
   end
 end
-
-end
