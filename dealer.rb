@@ -1,8 +1,8 @@
-class Dealer
-  attr_reader :cards, :money
+#A robot-player
 
-  def initialize
-    @cards = []
-    @money = 100
+class Dealer < Player
+
+  def initialize(name = 'Олег')
+    super
   end
 end
