@@ -16,18 +16,22 @@ class Player
   end
 
   def take_card
-    # забирает элементы массива колоды к себе в массив
+    @cards << @deck.delete_at(0)
   end
 
-  def put_card
-    # достать карту из массива игрока и положить на стол (ещё один массив?)
+  def initial_cards
+    loop do
+      take_card
+      break if @cards.length == 2
+    end
+  end
+
+  def open_cards
   end
 
   def skip
-    # пропустить ход
   end
 
   def count_points
-    # подсчитать очки на картах
   end
 end
