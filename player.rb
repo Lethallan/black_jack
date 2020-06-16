@@ -35,4 +35,4 @@ class Player
 
   def count_points
   end
-endcla
+end
