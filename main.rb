@@ -7,15 +7,23 @@ require_relative 'dealer'
 
 class Main
   def new_game
-    what_is_your_name
-    human ||= Human.new(gets.chomp)
-    dealer ||= Dealer.new
-    greetings
+    players
     shuffle_cards
     human.initial_cards
     human.gamble
     dealer.initial_cards
     dealer.gamble
+  end
+
+  def players
+    if human.nil? && dealer.nil??
+      what_is_your_name
+      human ||= Human.new(gets.chomp)
+      dealer ||= Dealer.new
+      greetings
+    else
+      nice_to_see_you_again
+    end
   end
 
   def what_is_your_name
@@ -29,6 +37,10 @@ class Main
     Greetings, #{human.name}!
     I'm #{dealer.name}.
     Let's get it started!"
+  end
+
+  def  nice_to_see_you_again
+    puts "Nice to see you again, #{human.name}!"
   end
 
   def shuffle_cards
@@ -82,7 +94,37 @@ class Main
   end
 
   def game_over
-    #offers two options: start a new game or exit
+    if human.money == 0
+      no_money
+    elsif dealer.money == 0
+      dealer_no_money
+    else
+      continue_or_not
+    end
+  end
+
+  def no_money
+    puts "#{human.name}, you have run out of money. Game over."
+  end
+
+  def dealer_no_money
+    puts "#{dealer.name} has run out of money. You totally win!"
+  end
+
+  def do_you_want_to_continue
+    puts '
+    Do you want to continue?
+    1 - Yes
+    2 - No'
+  end
+
+  def continue_or_not
+    do_you_want_to_continue
+    choice = gets.chomp.to_i
+
+    case choice
+    when 1 then new_game
+    when 2 then exit
   end
 end
 
