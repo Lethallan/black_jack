@@ -1,13 +1,14 @@
 #both human and robot
 
 class Player
-  attr_reader :name, :cards, :money, :bank
+  attr_reader :name, :cards, :money, :bank, :points
 
   def initialize(name)
     @cards = []
     @money = 100
     @name = name
     @bank = 0
+    @points = 0
   end
 
   def gamble
@@ -34,4 +35,4 @@ class Player
 
   def count_points
   end
-end
+endcla
