@@ -6,46 +6,31 @@ require_relative 'human'
 require_relative 'dealer'
 
 class Main
-  def new_game
-    players
-    shuffle_cards
-    human.initial_cards
-    human.gamble
-    dealer.initial_cards
-    dealer.gamble
-  end
+  attr_reader :human, :dealer, :current_deck
 
   def players
-    if human.nil? && dealer.nil??
+    if @human.nil? && @dealer.nil??
       what_is_your_name
-      human ||= Human.new(gets.chomp)
-      dealer ||= Dealer.new
+      @human ||= Human.new(gets.chomp)
+      @dealer ||= Dealer.new
       greetings
     else
       nice_to_see_you_again
     end
   end
 
-  def what_is_your_name
-    puts '
-    Here is Black Jack game.
-    What is your name?'
-  end
-
-  def greetings
-    puts "
-    Greetings, #{human.name}!
-    I'm #{dealer.name}.
-    Let's get it started!"
-  end
-
-  def  nice_to_see_you_again
-    puts "Nice to see you again, #{human.name}!"
-  end
-
   def shuffle_cards
     @current_deck = Deck.new
     @cuurent_deck.new_deck
+  end
+
+  def new_game
+    players
+    shuffle_cards
+    @human.initial_cards
+    @human.gamble
+    @dealer.initial_cards
+    @dealer.gamble
   end
 
   def options
@@ -66,16 +51,6 @@ class Main
     end
   end
 
-  def options_text
-    puts'
-    1 - Take a card
-    2 - Skip a move
-    3 - Open cards'
-  end
-
-  def counts_points
-  end
-
   def takes_cards
   end
 
@@ -85,37 +60,14 @@ class Main
   def opens_cards
   end
 
-  def wrong_command
-    puts 'No such action. Try again'
-  end
-
-  def information
-    #gives information about cards, points and gambles
-  end
-
   def game_over
-    if human.money == 0
+    if @human.money == 0
       no_money
-    elsif dealer.money == 0
+    elsif @dealer.money == 0
       dealer_no_money
     else
       continue_or_not
     end
-  end
-
-  def no_money
-    puts "#{human.name}, you have run out of money. Game over."
-  end
-
-  def dealer_no_money
-    puts "#{dealer.name} has run out of money. You totally win!"
-  end
-
-  def do_you_want_to_continue
-    puts '
-    Do you want to continue?
-    1 - Yes
-    2 - No'
   end
 
   def continue_or_not
@@ -125,6 +77,59 @@ class Main
     case choice
     when 1 then new_game
     when 2 then exit
+  end
+
+  def what_is_your_name
+    puts '
+    Here is Black Jack game.
+    What is your name?'
+  end
+
+  def greetings
+    puts "
+    Greetings, #{@human.name}!
+    I'm #{@dealer.name}.
+    Let's get it started!"
+  end
+
+  def nice_to_see_you_again
+    puts "Nice to see you again, #{@human.name}!"
+  end
+
+  def wrong_command
+    puts 'No such action. Try again'
+  end
+
+  def options_text
+    puts'
+    1 - Take a card
+    2 - Skip a move
+    3 - Open cards'
+  end
+
+  def show_score
+    puts "
+    #{@human.name}, you have #{@human.score} points
+    #{@dealer.name} has #{@dealer.score} points"
+  end
+
+  def information
+    #gives information about cards, points and gambles
+  end
+
+  def no_money
+    puts "#{@human.name}, you have run out of money. Game over."
+  end
+
+  def dealer_no_money
+    puts "#{@dealer.name} has run out of money. You totally win!"
+  end
+
+  def do_you_want_to_continue
+    puts '
+    Do you want to continue?
+    1 - Yes
+    2 - No'
   end
 end
 
