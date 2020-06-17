@@ -32,7 +32,6 @@ class Main
     @human.gamble
     @dealer.initial_cards
     @dealer.gamble
-    @total_bank = @human.bank + @dealer.bank
 
     @human.count_score
     @dealer.count_score
@@ -49,7 +48,7 @@ class Main
       options_text
 
       action = gets.chomp.to_i
-      break if game_over
+      break if action == 3 || players_three_cards
 
       case action
       when 1 then takes_card
@@ -58,6 +57,8 @@ class Main
       else wrong_command
       end
     end
+
+    final_actions
   end
 
   def takes_card
@@ -71,8 +72,40 @@ class Main
   end
 
   def opens_cards
+    final_actions
+  end
+
+  def players_three_cards
+    @dealer.cards.length == 3 && @human.cards.length == 3
+  end
+
+  def human_wins
+    human_wins_text
+    @human.win
+    @dealer.lose
+  end
+
+  def oops_draw
+    draw_text
+    @human.draw
+    @dealer.draw
+  end
+
+  def final_actions
     @human.show_cards
     @dealer.show_cards
+    show_score
+    winner
+    game_over
+  end
+
+  def winner
+    if @human.score > @dealer.score && human.score <= 21
+      human_wins
+    elsif @dealer.score == @human.score
+      oops_draw
+    else
+      dealer_wins
   end
 
   def game_over
@@ -110,8 +143,10 @@ class Main
     end
   end
 
-  def dealer_score
-    @dealer.count_score
+  def dealer_wins
+    dealer_wins_text
+    @dealer.win
+    @human.lose
   end
 
   def move_dealer_text
@@ -132,6 +167,10 @@ class Main
 
   def show_dealer_score
     puts "#{@dealer.name} has #{@dealer.score} points"
+  end
+
+  def dealer_wins_text
+    puts "#{dealer.name} wins!"
   end
   #_________________________________________
 
@@ -187,6 +226,14 @@ class Main
     Bank: #{@total_bank}
 
     #{dealer.name} has #{@dealer.cards.length} cards."
+  end
+
+  def human_wins_text
+    puts "#{@human.name} wins!"
+  end
+
+  def draw_text
+    puts 'We have a draw!'
   end
 
   def no_money

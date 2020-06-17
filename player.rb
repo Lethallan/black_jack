@@ -26,7 +26,13 @@ class Player
     end
   end
 
+  def get_rid_of_old_cards
+    @cards.clear if !@cards.empty?
+  end
+
   def initial_cards
+    get_rid_of_old_cards
+
     loop do
       take_card
       break if @cards.length == 2
@@ -59,4 +65,18 @@ class Player
       end
     end
   end
+end
+
+def win
+  @bank -= 10
+  @money += 20
+end
+
+def lose
+  @bank -= 10
+end
+
+def draw
+  @bank -= 10
+  @money += 10
 end
