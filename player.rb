@@ -14,12 +14,16 @@ class Player
   end
 
   def gamble
-    @money -=10
+    @money -= 10
     @bank += 10
   end
 
   def take_card
-    @cards << @deck.delete_at(0)
+    if @cards.length < 3
+      @cards << @deck.delete_at(0)
+    else
+      count_score
+    end
   end
 
   def initial_cards
@@ -29,10 +33,13 @@ class Player
     end
   end
 
-  def open_cards
+  def show_cards
+    @cards.each { |card| puts "#{card.value} #{card.suit}" }
   end
 
-  def skip
+  def do_nothing
+    !take_card
+    !open_cards
   end
 
   def ace
@@ -43,7 +50,7 @@ class Player
     end
   end
 
-  def count_points
+  def count_score
     @cards.each do |card|
       if card.value == 'A'
         ace

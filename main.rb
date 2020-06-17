@@ -8,6 +8,7 @@ require_relative 'dealer'
 class Main
   attr_reader :human, :dealer, :current_deck
 
+  #initial methods
   def players
     if @human.nil? && @dealer.nil??
       what_is_your_name
@@ -31,19 +32,27 @@ class Main
     @human.gamble
     @dealer.initial_cards
     @dealer.gamble
+    @total_bank = @human.bank + @dealer.bank
+
+    @human.count_score
+    @dealer.count_score
+
+    human_information
   end
 
+  #action methods
   def options
     new_game
 
     loop do
+      move_human
       options_text
 
       action = gets.chomp.to_i
       break if game_over
 
       case action
-      when 1 then takes_cards
+      when 1 then takes_card
       when 2 then skips_move
       when 3 then opens_cards
       else wrong_command
@@ -51,13 +60,19 @@ class Main
     end
   end
 
-  def takes_cards
+  def takes_card
+    @human.take_card
+    dealer_actions
   end
 
   def skips_move
+    @human.do_nothing
+    dealer_actions
   end
 
   def opens_cards
+    @human.show_cards
+    @dealer.show_cards
   end
 
   def game_over
@@ -79,6 +94,48 @@ class Main
     when 2 then exit
   end
 
+  #dealer's actions
+  def dealer_actions
+    move_dealer_text
+    @dealer.take_card || @dealer.open_cards || dealer.do_nothing
+  end
+
+  def dealer_puts
+    if @dealer.take_card
+      dealer_took_card
+    elsif @dealer.open_cards
+      dealer_opened_cards
+    else
+      dealer_skipped_move
+    end
+  end
+
+  def dealer_score
+    @dealer.count_score
+  end
+
+  def move_dealer_text
+    puts "#{@dealer.name} makes a move."
+  end
+
+  def dealer_took_card
+    puts "#{@dealer.name} takes a card"
+  end
+
+  def dealer_opened_cards
+    puts "#{@dealer.name} opens cards"
+  end
+
+  def dealer_skipped_move
+    puts "#{@dealer.name} does nothing"
+  end
+
+  def show_dealer_score
+    puts "#{@dealer.name} has #{@dealer.score} points"
+  end
+  #_________________________________________
+
+  #puts methods
   def what_is_your_name
     puts '
     Here is Black Jack game.
@@ -96,15 +153,25 @@ class Main
     puts "Nice to see you again, #{@human.name}!"
   end
 
-  def wrong_command
-    puts 'No such action. Try again'
-  end
-
   def options_text
     puts'
     1 - Take a card
     2 - Skip a move
     3 - Open cards'
+  end
+
+  def wrong_command
+    puts 'No such action. Try again'
+  end
+
+  def move_human
+    puts "#{@human.name}, it's your turn."
+  end
+
+  def too_many_cards
+    puts "
+    #{@human.name}, you already have 3 cards.
+    Try something else"
   end
 
   def show_score
@@ -113,8 +180,13 @@ class Main
     #{@dealer.name} has #{@dealer.score} points"
   end
 
-  def information
-    #gives information about cards, points and gambles
+  def human_information
+    puts "
+    #{@human.name}, your cards: #{@human.show_cards}
+    Your score: #{@human.score}.
+    Bank: #{@total_bank}
+
+    #{dealer.name} has #{@dealer.cards.length} cards."
   end
 
   def no_money
