@@ -1,14 +1,16 @@
 #both human and robot
 
 class Player
-  attr_reader :name, :cards, :money, :bank, :points
+  POINTS_HASH = { '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, '10' => 10, 'J' => 10, 'Q' => 10, 'K' => 10 }
+
+  attr_reader :name, :cards, :money, :bank, :score
 
   def initialize(name)
     @cards = []
     @money = 100
     @name = name
     @bank = 0
-    @points = 0
+    @score = 0
   end
 
   def gamble
@@ -33,6 +35,21 @@ class Player
   def skip
   end
 
+  def ace
+    if @score <= 10
+      @score += 11
+    else
+      @score += 1
+    end
+  end
+
   def count_points
+    @cards.each do |card|
+      if card.value == 'A'
+        ace
+      else
+        @score += POINTS_HASH.fetch(card.value)
+      end
+    end
   end
 end
