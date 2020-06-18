@@ -1,7 +1,10 @@
-#both human and robot
+
+# both human and robot
+require 'pry'
+require 'pry-byebug'
 
 class Player
-  POINTS_HASH = { '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, '10' => 10, 'J' => 10, 'Q' => 10, 'K' => 10 }
+  POINTS_HASH = { '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, '10' => 10, 'J' => 10, 'Q' => 10, 'K' => 10 }.freeze
 
   attr_reader :name, :cards, :money, :bank, :score
 
@@ -18,34 +21,30 @@ class Player
     @bank += 10
   end
 
-  def take_card
+  def take_card(deck)
     if @cards.length < 3
-      @cards << @deck.delete_at(0)
+      @cards << deck.deck.delete_at(0)
     else
       count_score
     end
   end
 
   def get_rid_of_old_cards
-    @cards.clear if !@cards.empty?
+    @cards.clear unless @cards.empty?
   end
 
-  def initial_cards
+  def initial_cards(deck)
     get_rid_of_old_cards
-
-    loop do
-      take_card
-      break if @cards.length == 2
-    end
+    2.times { take_card(deck) }
   end
 
   def show_cards
     @cards.each { |card| puts "#{card.value} #{card.suit}" }
   end
 
-  def do_nothing
-    !take_card
-    !open_cards
+  def do_nothing(deck)
+    !take_card(deck)
+    !show_cards
   end
 
   def ace
@@ -65,18 +64,18 @@ class Player
       end
     end
   end
-end
 
-def win
-  @bank -= 10
-  @money += 20
-end
+  def win
+    @bank -= 10
+    @money += 20
+  end
 
-def lose
-  @bank -= 10
-end
+  def lose
+    @bank -= 10
+  end
 
-def draw
-  @bank -= 10
-  @money += 10
+  def draw
+    @bank -= 10
+    @money += 10
+  end
 end

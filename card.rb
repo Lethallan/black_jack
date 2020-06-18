@@ -1,4 +1,4 @@
-#just a card
+# just a card
 
 class Card
   attr_reader :value, :suit

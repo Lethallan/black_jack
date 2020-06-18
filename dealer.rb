@@ -1,4 +1,4 @@
-#A robot-player
+# A robot-player
 
 class Dealer < Player
   def initialize(name = 'Bilbo Baggins')

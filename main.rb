@@ -4,16 +4,18 @@ require_relative 'card'
 require_relative 'player'
 require_relative 'human'
 require_relative 'dealer'
+require'pry'
+require 'pry-byebug'
 
 class Main
   attr_reader :human, :dealer, :current_deck
 
   #initial methods
   def players
-    if @human.nil? && @dealer.nil??
+    if @human.nil? && @dealer.nil?
       what_is_your_name
-      @human ||= Human.new(gets.chomp)
-      @dealer ||= Dealer.new
+      @human = Human.new(gets.chomp)
+      @dealer = Dealer.new
       greetings
     else
       nice_to_see_you_again
@@ -21,16 +23,16 @@ class Main
   end
 
   def shuffle_cards
-    @current_deck = Deck.new
-    @cuurent_deck.new_deck
+    @deck = Deck.new
+    @deck.new_deck
   end
 
   def new_game
     players
     shuffle_cards
-    @human.initial_cards
+    @human.initial_cards(@deck)
     @human.gamble
-    @dealer.initial_cards
+    @dealer.initial_cards(@deck)
     @dealer.gamble
 
     @human.count_score
@@ -62,12 +64,12 @@ class Main
   end
 
   def takes_card
-    @human.take_card
+    @human.take_card(@deck)
     dealer_actions
   end
 
   def skips_move
-    @human.do_nothing
+    @human.do_nothing(@deck)
     dealer_actions
   end
 
@@ -106,6 +108,7 @@ class Main
       oops_draw
     else
       dealer_wins
+    end
   end
 
   def game_over
@@ -125,18 +128,19 @@ class Main
     case choice
     when 1 then new_game
     when 2 then exit
+    end
   end
 
   #dealer's actions
   def dealer_actions
     move_dealer_text
-    @dealer.take_card || @dealer.open_cards || dealer.do_nothing
+    @dealer.take_card(@deck) || @dealer.open_cards || dealer.do_nothing(@deck)
   end
 
   def dealer_puts
-    if @dealer.take_card
+    if @dealer.take_card(@deck)
       dealer_took_card
-    elsif @dealer.open_cards
+    elsif @dealer.show_cards
       dealer_opened_cards
     else
       dealer_skipped_move
