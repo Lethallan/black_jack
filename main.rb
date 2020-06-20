@@ -134,6 +134,7 @@ class Main
   #dealer's actions
   def dealer_actions
     move_dealer_text
+    dealer_puts
     @dealer.take_card(@deck) || @dealer.open_cards || dealer.do_nothing(@deck)
   end
 

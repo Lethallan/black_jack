@@ -64,15 +64,5 @@ ________________________________________
 
 Нууу... вроде бы всё.
 
-Баг
-Traceback (most recent call last):
-	6: from main.rb:258:in `<main>'
-	5: from main.rb:44:in `options'
-	4: from main.rb:31:in `new_game'
-	3: from /Users/junior/dev/black_jack/player.rb:38:in `initial_cards'
-	2: from /Users/junior/dev/black_jack/player.rb:38:in `loop'
-	1: from /Users/junior/dev/black_jack/player.rb:39:in `block in initial_cards'
-/Users/junior/dev/black_jack/player.rb:25:in `take_card': undefined method `delete_at' for nil:NilClass (NoMethodError)'
-
-Не видит колоду
-Почему-то не считает колоду массивом
+Оно почти работает. Багов нет. Но я что-то напутала с путсами.
+Не всё показывается как надо. И конец игры работает неправильно.

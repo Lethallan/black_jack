@@ -31,6 +31,7 @@ class Player
 
   def get_rid_of_old_cards
     @cards.clear unless @cards.empty?
+    @score = 0 unless score.zero?
   end
 
   def initial_cards(deck)
