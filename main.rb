@@ -50,7 +50,7 @@ class Main
       options_text
 
       action = gets.chomp.to_i
-      break if action == 3 || players_three_cards
+      break if action == 3 || players_three_cards || @dealer.show_cards
 
       case action
       when 1 then takes_card
@@ -77,9 +77,19 @@ class Main
     final_actions
   end
 
-  def players_three_cards
-    @dealer.cards.length == 3 && @human.cards.length == 3
+  #three cards condition
+  def human_three_cards
+    @human.cards.length == 3
   end
+
+  def dealer_three_cards
+    @dealer.cards.length == 3
+  end
+
+  def players_three_cards
+   human_three_cards && dealer_three_cards
+  end
+  #___________________________________
 
   def human_wins
     human_wins_text
@@ -101,15 +111,31 @@ class Main
     game_over
   end
 
+  #victory_conditions
+  def victory_conditions_human
+    (@human.score > @dealer.score) && (human.score <= 21)
+  end
+
+  def draw_conditions
+    @dealer.score == @human.score
+  end
+
+  def victory_conditions_dealer
+   (@human.score < @dealer.score) && (dealer.score <= 21)
+  end
+
   def winner
-    if @human.score > @dealer.score && human.score <= 21
+    if victory_conditions_human
       human_wins
-    elsif @dealer.score == @human.score
+    elsif draw_conditions
       oops_draw
-    else
+    elsif victory_conditions_dealer
       dealer_wins
+    else
+      wrong_method
     end
   end
+  #_______________________________
 
   def game_over
     if @human.money == 0
@@ -128,14 +154,27 @@ class Main
     case choice
     when 1 then new_game
     when 2 then exit
+    else wrong_method
     end
   end
 
   #dealer's actions
   def dealer_actions
     move_dealer_text
+    dealer_conditions_for_actions
     dealer_puts
-    @dealer.take_card(@deck) || @dealer.open_cards || dealer.do_nothing(@deck)
+  end
+
+  def dealer_conditions_for_actions
+    if @dealer.score == 21
+      @dealer.show_cards
+    elsif (@dealer.score < 21) && (@dealer.score > 15)
+      @dealer.do_nothing(@deck)
+    elsif @dealer.score < 15
+      @dealer.take_card(@deck)
+    else
+      wrong_method
+    end
   end
 
   def dealer_puts
@@ -175,7 +214,11 @@ class Main
   end
 
   def dealer_wins_text
-    puts "#{dealer.name} wins!"
+    puts "#{@dealer.name} wins!"
+  end
+
+  def dealer_show_cards
+    puts "#{@dealer.name} has cards #{@dealer.show_cards}"
   end
   #_________________________________________
 
@@ -228,7 +271,7 @@ class Main
     puts "
     #{@human.name}, your cards: #{@human.show_cards}
     Your score: #{@human.score}.
-    Bank: #{@total_bank}
+    Bank: #{@human.bank + @dealer.bank}
 
     #{dealer.name} has #{@dealer.cards.length} cards."
   end
@@ -254,6 +297,10 @@ class Main
     Do you want to continue?
     1 - Yes
     2 - No'
+  end
+
+  def wrong_method
+    puts 'something is wrong...'
   end
 end
 
