@@ -170,20 +170,20 @@ class Main
     dealer_puts
   end
 
+  def dealer_takes_card
+    @dealer.take_card(@deck)
+    @dealer.count_score
+  end
+
+  def dealer_shows_cards
+    @dealer.show_cards
+  end
+
+  def dealer_waits
+    @dealer.do_nothing(@deck)
+  end
+
   def dealer_conditions_for_actions
-    def dealer_takes_card
-      @dealer.take_card(@deck)
-      @dealer.count_score
-    end
-
-    def dealer_shows_cards
-      @dealer.show_cards
-    end
-
-    def dealer_waits
-      @dealer.do_nothing(@deck)
-    end
-
     if @dealer.score == 21
       dealer_shows_cards
     elsif (@dealer.score < 21) && (@dealer.score > 15)
