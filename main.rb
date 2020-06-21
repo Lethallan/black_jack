@@ -52,7 +52,7 @@ class Main
       options_text
 
       action = gets.chomp.to_i
-      break if action == 3 || players_three_cards || @dealer.show_cards
+      break if action == 3 || players_three_cards || @dealer.score >= 21
 
       case action
       when 1 then takes_card
@@ -67,7 +67,6 @@ class Main
 
   def takes_card
     @human.take_card(@deck)
-    @human.count_score
     dealer_actions
   end
 
@@ -116,15 +115,15 @@ class Main
 
   #victory_conditions
   def victory_conditions_human
-    (@human.score > @dealer.score) && (human.score <= 21)
+    ((@human.score > @dealer.score) && (human.score <= 21)) || ((@human.score <= 21) && (@dealer.score > 21))
   end
 
   def draw_conditions
-    @dealer.score == @human.score
+    (@dealer.score == @human.score) || ((@dealer.score > 21) && (@human.score > 21))
   end
 
   def victory_conditions_dealer
-   (@human.score < @dealer.score) && (dealer.score <= 21)
+   ((@human.score < @dealer.score) && (dealer.score <= 21)) || ((@human.score > 21) && (@dealer.score <= 21))
   end
 
   def winner
@@ -172,7 +171,6 @@ class Main
 
   def dealer_takes_card
     @dealer.take_card(@deck)
-    @dealer.count_score
   end
 
   def dealer_shows_cards
@@ -189,7 +187,7 @@ class Main
     elsif (@dealer.score < 21) && (@dealer.score > 15)
       dealer_waits
     elsif @dealer.score <= 15
-      dealer_take_card
+      dealer_takes_card
     else
       wrong_method
     end
