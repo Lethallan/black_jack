@@ -67,6 +67,7 @@ class Main
 
   def takes_card
     @human.take_card(@deck)
+    human_show_cards
     dealer_actions
   end
 
@@ -280,6 +281,9 @@ class Main
   end
 
   def show_score
+    @human.count_score
+    @dealer.count_score
+
     puts "
     #{@human.name}, you have #{@human.score} points
     #{@dealer.name} has #{@dealer.score} points"
