@@ -27,17 +27,19 @@ class Main
     @deck.new_deck
   end
 
+  def start_cards
+    @human.initial_cards(@deck)
+    @dealer.initial_cards(@deck)
+    @human.gamble
+    @dealer.gamble
+    @human.count_score
+    @dealer.count_score
+  end
+
   def new_game
     players
     shuffle_cards
-    @human.initial_cards(@deck)
-    @human.gamble
-    @dealer.initial_cards(@deck)
-    @dealer.gamble
-
-    @human.count_score
-    @dealer.count_score
-
+    start_cards
     human_information
   end
 
@@ -65,6 +67,7 @@ class Main
 
   def takes_card
     @human.take_card(@deck)
+    @human.count_score
     dealer_actions
   end
 
@@ -104,8 +107,8 @@ class Main
   end
 
   def final_actions
-    @human.show_cards
-    @dealer.show_cards
+    human_show_cards
+    dealer_show_cards
     show_score
     winner
     game_over
@@ -134,13 +137,15 @@ class Main
     else
       wrong_method
     end
+
+    show_money
   end
   #_______________________________
 
   def game_over
-    if @human.money == 0
+    if @human.money <= 0
       no_money
-    elsif @dealer.money == 0
+    elsif @dealer.money <= 0
       dealer_no_money
     else
       continue_or_not
@@ -152,7 +157,7 @@ class Main
     choice = gets.chomp.to_i
 
     case choice
-    when 1 then new_game
+    when 1 then options
     when 2 then exit
     else wrong_method
     end
@@ -166,24 +171,39 @@ class Main
   end
 
   def dealer_conditions_for_actions
-    if @dealer.score == 21
-      @dealer.show_cards
-    elsif (@dealer.score < 21) && (@dealer.score > 15)
-      @dealer.do_nothing(@deck)
-    elsif @dealer.score < 15
+    def dealer_takes_card
       @dealer.take_card(@deck)
+      @dealer.count_score
+    end
+
+    def dealer_shows_cards
+      @dealer.show_cards
+    end
+
+    def dealer_waits
+      @dealer.do_nothing(@deck)
+    end
+
+    if @dealer.score == 21
+      dealer_shows_cards
+    elsif (@dealer.score < 21) && (@dealer.score > 15)
+      dealer_waits
+    elsif @dealer.score <= 15
+      dealer_take_card
     else
       wrong_method
     end
   end
 
   def dealer_puts
-    if @dealer.take_card(@deck)
+    if dealer_takes_card
       dealer_took_card
-    elsif @dealer.show_cards
+    elsif dealer_shows_cards
       dealer_opened_cards
-    else
+    elsif dealer_waits
       dealer_skipped_move
+    else
+      wrong_method
     end
   end
 
@@ -271,9 +291,14 @@ class Main
     puts "
     #{@human.name}, your cards: #{@human.show_cards}
     Your score: #{@human.score}.
+    Your money: #{@human.money}
     Bank: #{@human.bank + @dealer.bank}
 
     #{dealer.name} has #{@dealer.cards.length} cards."
+  end
+
+  def human_show_cards
+    puts "#{@human.name}, your cards: #{@human.show_cards}"
   end
 
   def human_wins_text
@@ -290,6 +315,12 @@ class Main
 
   def dealer_no_money
     puts "#{@dealer.name} has run out of money. You totally win!"
+  end
+
+  def show_money
+    puts " Money:
+    #{@human.name} - #{@human.money}
+    #{dealer.name} - #{@dealer.money}"
   end
 
   def do_you_want_to_continue

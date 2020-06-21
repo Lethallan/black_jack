@@ -10,7 +10,7 @@ class Player
 
   def initialize(name)
     @cards = []
-    @money = 100
+    @money ||= 100
     @name = name
     @bank = 0
     @score = 0
@@ -40,7 +40,7 @@ class Player
   end
 
   def show_cards
-    @cards.each { |card| puts "#{card.value} #{card.suit}" }
+    @cards.map { |card| "#{card.value}#{card.suit}" }
   end
 
   def do_nothing(deck)
