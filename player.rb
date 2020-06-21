@@ -57,6 +57,7 @@ class Player
   end
 
   def count_score
+    @score = 0
     @cards.each do |card|
       if card.value == 'A'
         ace
